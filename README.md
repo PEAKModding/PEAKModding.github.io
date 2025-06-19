@@ -4,7 +4,32 @@
 
 See the wiki at <https://peakmodding.github.io>.
 
+## 🚀 Project Structure
+
+Inside of your Astro + Starlight project, you'll see the following folders and files:
+
+```txt
+.
+├── public/
+├── src/
+│   ├── assets/
+│   ├── content/
+│   │   ├── docs/
+│   └── content.config.ts
+├── astro.config.mjs
+├── package.json
+└── tsconfig.json
+```
+
+Starlight looks for `.md` or `.mdx` files in the `src/content/docs/` directory. Each file is exposed as a route based on its file name.
+
+Images can be added to `src/assets/` and embedded in Markdown with a relative link.
+
+Static assets, like favicons, can be placed in the `public/` directory.
+
 ## 🧞 Commands
+
+Install bun: `npm install -g bun` <https://bun.sh/docs/installation>
 
 All commands are run from the root of the project, from a terminal:
 
