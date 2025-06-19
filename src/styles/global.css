@@ -1,0 +1,12 @@
+:root {
+    --sl-content-width: 50rem;
+}
+
+.sidebar-pane {
+    border-right: 1px solid var(--sl-color-hairline-shade);
+}
+
+.right-sidebar {
+    border-left: 1px solid var(--sl-color-hairline-shade);
+    margin-top: 10px;
+}
