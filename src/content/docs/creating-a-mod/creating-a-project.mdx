@@ -5,19 +5,26 @@ sidebar:
   order: 1
 ---
 
-import { LinkCard } from '@astrojs/starlight/components';
+import { LinkCard, LinkButton } from '@astrojs/starlight/components';
 
 Creating a mod for PEAK is simple using the official BepInEx template. This guide covers installing the template, generating a project, and configuring it for development.
 
 ## Installing
 
-Before creating a mod, you must install the .NET template. This only needs to be done once.
+.NET templates must be installed before they can be used. This means that when you install the template, it doesn't create a new project for you, but you will get the ability to do that.
 
-:::note
+Once you have the template installed, you don't need to install it again, through it's a good idea to update it if there are updates.
+
+<LinkButton href="https://github.com/PEAKModding/BepInExTemplate" variant="minimal" icon="external">
+  See the BepInEx Template repository
+</LinkButton>
+
+:::caution
 You must use .NET SDK 8 or newer. Older versions are unsupported.
 :::
 
 ### From NuGet (Recommended)
+
 
 Install the template by running:
 
@@ -29,7 +36,7 @@ dotnet new install PEAKModding.BepInExTemplate
 
 If you're contributing to the template or prefer manual installation:
 
-1. Clone or download this repository
+1. Clone or download [this repository](<https://github.com/PEAKModding/BepInExTemplate>)
 2. Open a terminal in the root of the project
 3. Run:
 
@@ -37,99 +44,97 @@ If you're contributing to the template or prefer manual installation:
 dotnet new install .
 ```
 
-To update:  
+To update:
+
 ```bash
 dotnet new install . --force
 ```
 
-To uninstall:  
+To uninstall:
+
 ```bash
 dotnet new uninstall .
 ```
 
-Once installed, the template will be available as `PEAK BepInEx Plugin`.
+Once installed, the template will be available as `PEAK BepInEx Plugin` with an alias `peakmod`.
 
 ## Creating a New Mod
 
 Run the following command in your PEAK modding directory:
 
+
 ```bash
-dotnet new peakmod --name ModName --guid com.github.YourAccount.ModName
+dotnet new peakmod --name ModName --guid com.github.YourAccount.ModName --ts-team YourThunderstoreTeam
 ```
 
 This will create a new folder called `ModName` with your mod's project.
 
 :::tip
-Use `--no-tutorial` to skip tutorial comments in the generated code.
+If you are developing a public API, add the `--library` option for included NuGet metadata!
+:::
+:::tip
+Use `--no-tutorial` to get rid of tutorial comments in the template. Note that this doesn't get rid of *all* comments.
 :::
 
 ## Project Structure
 
-An example structure after generating a mod:
+This example demonstrates the structure of the project after using the template:
 
 ```bash
-~/Workspace/PEAK$ dotnet new peakmod --name PeakMod --guid com.github.PEAKModding.PeakMod
+~/Workspace/PEAK$ dotnet new peakmod --name PeakMod --guid com.github.PEAKModding --ts-team PEAKModding
+The template "PEAK BepInEx Plugin" was created successfully.
+
 ~/Workspace/PEAK$ cd PeakMod/
 ~/Workspace/PEAK/PeakMod$ tree
 .
+├── CHANGELOG.md
 ├── Config.Build.user.props.template
 ├── Directory.Build.props
 ├── Directory.Build.targets
+├── icon.png
 ├── LICENSE
-├── PeakMod.sln
 ├── NuGet.Config
+├── PeakMod.sln
 ├── README.md
 └── src
     └── PeakMod
         ├── PeakMod.csproj
-        └── Plugin.cs
+        ├── Plugin.cs
+        └── thunderstore.toml
+
+3 directories, 12 files
 ```
 
 Key points:
 
-- Your mod code is in `src/PeakMod/`
-- `Directory.Build.*` files define shared build settings
-- `PeakMod.sln` is your project solution
+- Your mod code is in `./src/<project-name>/`
+- `Directory.Build.*` files define shared build configuration
+- `<project-name>.sln` is your project solution
 
-## Configuring Your Game Path
+The project is configured so that it's easy to add new projects into your project solution. Even if you don't need that, it's good to follow this standard project structure.
 
-To allow the build system to deploy directly to your PEAK install:
+### Setting Up The Config File
 
-1. Copy `Config.Build.user.props.template` → `Config.Build.user.props`
-2. Open it in a text editor
-3. Replace the placeholder with your game path:
+At the root of your new project you should see a file named `Config.Build.user.props.template`. This is a special file that is the template for the project's user-specific config. Make a copy of this file and rename it `Config.Build.user.props` without the template part.
 
-```xml
-<GameDir>C:/Program Files (x86)/Steam/steamapps/common/PEAK</GameDir>
-```
+This file will copy your assembly files to a plugins directory and it can be used to configure your paths to the game files and BepInEx plugins directory if the defaults don't work for you.
 
-Save the file. Your project can now build directly into the game folder.
+### Thunderstore Packaging
 
-## Manual Build Commands
+This template comes with Thunderstore packaging built-in, using [TCLI](<https://github.com/thunderstore-io/thunderstore-cli>). You should configure the `src/<project-name>/thunderstore.toml` file for your mod, such as setting the description for your mod.
 
-If you're not using Visual Studio or VS Code, you can build from the terminal.
+You can build Thunderstore packages by running `dotnet build -c Release -target:PackTS`. The built package will be found at `artifacts/thunderstore/`.
+
+You can also directly publish to Thunderstore by including `-property:PublishTS=true` in the command.
 
 :::note
-These commands require a valid `Config.Build.user.props` file.
+For publishing to Thunderstore, you need a Thunderstore API token. The publishing to Thunderstore option is intended to be used via automated GitHub actions workflows, so you don't need to worry about it.
 :::
 
-### Deploy to Game
+### GitHub Actions Publishing
 
-```bash
-dotnet build -p:DeployToProd=true
-```
+Coming soon.
 
-### Build for Release
-
-```bash
-dotnet build -p:BuildStaging=true
-```
-
-This creates a zip in the `artifacts/` folder for sharing or GitHub releases.
-
-:::warning
-The staging build requires a `LICENSE` file in your project root (alongside the `.sln`).
-:::
 
 <LinkCard
   title="Coding"
