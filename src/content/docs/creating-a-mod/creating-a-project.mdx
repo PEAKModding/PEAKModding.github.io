@@ -5,7 +5,7 @@ sidebar:
   order: 1
 ---
 
-import { LinkCard, LinkButton } from '@astrojs/starlight/components';
+import { LinkCard, LinkButton, FileTree } from '@astrojs/starlight/components';
 
 Creating a mod for PEAK is simple using the official BepInEx template. This guide covers installing the template, generating a project, and configuring it for development.
 
@@ -90,25 +90,26 @@ This example demonstrates the structure of the project after using the template:
 The template "PEAK BepInEx Plugin" was created successfully.
 
 ~/Workspace/PEAK$ cd PeakMod/
-~/Workspace/PEAK/PeakMod$ tree
-.
-├── CHANGELOG.md
-├── Config.Build.user.props.template
-├── Directory.Build.props
-├── Directory.Build.targets
-├── icon.png
-├── LICENSE
-├── NuGet.Config
-├── PeakMod.sln
-├── README.md
-└── src
-    └── PeakMod
-        ├── PeakMod.csproj
-        ├── Plugin.cs
-        └── thunderstore.toml
-
-3 directories, 12 files
 ```
+
+The file structure in `PeakMod/` should look like this:
+
+<FileTree>
+- CHANGELOG.md
+- Config.Build.user.props.template
+- Directory.Build.props
+- Directory.Build.targets
+- icon.png
+- LICENSE
+- NuGet.Config
+- PeakMod.sln
+- README.md
+- src
+  - PeakMod
+    - PeakMod.csproj
+    - Plugin.cs
+    - thunderstore.toml
+</FileTree>
 
 Key points:
 

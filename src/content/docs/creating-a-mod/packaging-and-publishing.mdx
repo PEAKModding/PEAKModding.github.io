@@ -5,7 +5,7 @@ sidebar:
   order: 3
 ---
 
-import { LinkCard } from '@astrojs/starlight/components';
+import { LinkCard, FileTree } from '@astrojs/starlight/components';
 
 The most preferred way to publish PEAK mods is through [Thunderstore](https://thunderstore.io/c/peak/), where the community also hangs out.
 
@@ -23,16 +23,15 @@ If you used the template, you can build Thunderstore packages by running `dotnet
 Create a new folder. Here we want to create a few files and one folder.  
 Your new mod folder should look like this:
 
-```
-.
-├── LICENSE (optional)
-├── manifest.json
-├── README.md
-├── CHANGELOG.md
-├── Icon.png
-└── plugins
-    └── YourMod.dll
-```
+<FileTree>
+- LICENSE (optional)
+- manifest.json
+- README.md
+- CHANGELOG.md
+- Icon.png
+- plugins
+  - YourMod.dll
+</FileTree>
 
 ### `manifest.json`
 
