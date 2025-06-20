@@ -5,4 +5,68 @@ sidebar:
   order: 0
 ---
 
-For now, see https://lethal.wiki/dev/initial-setup
+import { LinkCard } from '@astrojs/starlight/components';
+
+Modding might sound complicated, but it's much easier if you start with the right mindset and a simple mod.
+
+:::note
+Pirated versions of the game don't and never will support modding.
+:::
+
+## Install the Requirements
+
+Before you can start modding PEAK, you’ll need to install two essential tools:
+
+- **.NET SDK 8.0 or 9.0** – *This is needed so you can compile C# code.*
+  - [Download .NET here](https://dotnet.microsoft.com/en-us/download)
+- **IDE** – *This is where you'll write and build your code. Choosing one can depend on your preferences and system.*
+  - [Rider](https://www.jetbrains.com/rider/#) (The best all-in-one)
+  - [Visual Studio Code](https://code.visualstudio.com) (Lightweight and customizable)
+  - [Visual Studio](https://visualstudio.microsoft.com/vs/community/) (Widely used in tutorials)
+
+Now that you have .NET and an IDE, we can move on to creating your first mod.
+
+:::caution
+This guide will not cover setting up your IDE. If you're stuck at this point, try watching a video tutorial.
+:::
+
+## Installing BepInEx
+
+Install the PEAK-specific version of BepInEx from Thunderstore.  
+You can download it from [here](https://thunderstore.io/c/peak/p/BepInEx/BepInExPack_PEAK/).
+
+Unzip the BepInEx download, then copy all of its contents into PEAK’s game directory. You can find the game folder by going to:  
+`Steam > Library > PEAK > Manage > Browse local files`
+
+**Note: Mod managers currently don’t support PEAK, so manual installation is required. – 20ᵗʰ June 2025**
+
+After copying the files, launch the game once so BepInEx can generate the necessary configuration files. You can then safely close the game.
+
+:::note
+If you've used BepInEx before, you may notice the console window doesn't appear — this is normal.  
+PEAK can be unstable with the console enabled, and the reason is still unknown.
+
+You **can** re-enable the console by opening `BepInEx/config/BepInEx.cfg` and setting `HideManagerGameObject = false`
+:::
+
+## Installing a Decompiler
+
+:::note
+This step is optional but highly recommended if you want to understand or debug PEAK’s code.
+:::
+
+A decompiler allows you to inspect the game’s internal code. This helps you discover useful classes and methods that can be modified using Harmony.
+
+You only need one decompiler. Recommended options:
+
+- [ILSpy](https://github.com/icsharpcode/ILSpy)
+- [dnSpy](https://github.com/dnSpyEx/dnSpy)
+- [dotPeek](https://www.jetbrains.com/decompiler/#)
+
+You’re now ready to move on:
+
+<LinkCard
+  title="Creating a Project"
+  href="/creating-a-mod/creating-a-project/"
+  description="Create a new C# BepInEx 5 project based on a template made for PEAK modding"
+/>

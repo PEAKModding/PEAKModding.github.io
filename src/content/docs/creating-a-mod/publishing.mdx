@@ -1,0 +1,164 @@
+---
+title: Publishing
+description: Step 3 of making a mod is publishing it!
+sidebar:
+  order: 3
+---
+
+import { LinkCard } from '@astrojs/starlight/components';
+
+The most preferred way to publish PEAK mods is through [Thunderstore](https://thunderstore.io/c/peak/), where the community also hangs out.
+
+Before uploading your mod, you need to have built it into a `.dll`.
+
+## Make a new mod folder
+
+In this folder, we want to create a few files and one folder.  
+Your new mod folder should look like this:
+
+```
+.
+├── LICENSE (optional)
+├── manifest.json
+├── README.md
+├── CHANGELOG.md
+├── Icon.png
+└── plugins
+    └── YourMod.dll
+```
+
+### `manifest.json`
+
+Your manifest is crucial — without it, your mod won't work on Thunderstore.
+
+Here’s an example of what it should look like:
+
+```json
+{
+  "name": "Your_mod_name",
+  "version_number": "1.0.0",
+  "website_url": "https://peakmodding.github.io",
+  "description": "A mod description",
+  "dependencies": []
+}
+```
+
+The manifest is fragile. Use this tool to validate it:  
+[Thunderstore Manifest Validator](https://thunderstore.io/tools/manifest-v1-validator/)
+
+**Notes:**
+- Underscores in `name` will appear as spaces on the site.
+- `version_number` must increase with every release.
+- `website_url` is optional, but linking your GitHub page is recommended.
+- You can include any number of dependencies.
+
+**Example with dependencies:**
+
+```json
+{
+  ...
+  "dependencies": [
+    "MonoDetour-MonoDetour_BepInEx_5-0.6.6",
+    "MonoDetour-MonoDetour-0.6.6"
+  ]
+}
+```
+
+Dependency strings can be found on the individual mod’s page on Thunderstore.
+
+### `README.md` & `CHANGELOG.md`
+
+- `README.md` becomes your mod’s description on Thunderstore.
+- `CHANGELOG.md` is optional, but useful for showing update history.
+
+Both files support Markdown formatting. Example:
+
+<details>
+<summary> Amazing feature 1 </summary>
+
+- This is an amazing feature for only the best.
+
+</details>
+
+```
+Amazing feature 2
+```
+
+Helpful resource: [Markdown Cheat Sheet](https://www.markdownguide.org/cheat-sheet/)
+
+### `Icon.png`
+
+Your icon must be exactly **256x256** pixels.
+
+### LICENSE
+
+Choosing a license can feel overwhelming, but here’s a simple guide:
+
+1. **Do you want others to use your code in their mods?**
+2. **Do you want credit for your work?**
+3. **Do you care if others use it in commercial/closed-source projects?**
+
+Common license options:
+
+- **MIT License** — Very permissive. Others can reuse your code with attribution, even commercially.
+- **GPL-3.0** — Requires others to also open-source their projects if they use your code.
+- **CC0 / Unlicense** — No rights reserved. Anyone can use your code however they want, no credit needed.
+
+Generate one here: [choosealicense.com](https://choosealicense.com/)
+
+:::tip
+If you're unsure, **MIT** is a safe and popular choice for mods.
+:::
+
+:::danger
+Not including a LICENSE file means your mod defaults to **All Rights Reserved** — others cannot legally use, share, or remix it.
+:::
+
+## Packaging and uploading
+
+To upload a mod, first create a Thunderstore team by logging in and going here:  
+https://thunderstore.io/settings/teams/create/
+
+:::tip
+Once a mod is uploaded, your Thunderstore team **cannot** be deleted or renamed — choose carefully!
+:::
+
+Now zip up your contents.
+
+**Do NOT zip the folder itself.**  
+Instead, select all files inside and compress them.
+
+On Windows:
+- Select all files
+- Right-click → Send to → Compressed (zipped) folder
+
+Then go to: [Thunderstore Upload Page](https://thunderstore.io/c/peak/create/)
+
+- Upload your `.zip`
+- Select your team
+- Choose **PEAK** as the community
+- Select relevant categories
+- Submit!
+
+If your mod is NSFW, make sure to mark it.
+
+## Get the Modder Role
+
+Want that shiny **Modder** role in the [PEAK Modding server](https://discord.gg/SAw86z24rB)?
+
+Just do the following:
+- Join the server
+- Go to `#mod-releases`
+- Post your mod
+- Wait for the role to be assigned (if applicable)
+
+:::danger
+Skipping steps can cause your mod upload to fail.  
+If it's rejected by moderation, visit the `#rejected-uploads` channel in the Discord server to appeal.
+:::
+
+<LinkCard
+  title="Updating"
+  href="/creating-a-mod/updating/"
+  description="Update your mod instead of creating a new one"
+/>
