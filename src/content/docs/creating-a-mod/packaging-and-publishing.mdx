@@ -1,5 +1,5 @@
 ---
-title: Publishing
+title: Packaging and Publishing
 description: Step 3 of making a mod is publishing it!
 sidebar:
   order: 3
@@ -11,9 +11,16 @@ The most preferred way to publish PEAK mods is through [Thunderstore](https://th
 
 Before uploading your mod, you need to have built it into a `.dll`.
 
-## Make a new mod folder
 
-In this folder, we want to create a few files and one folder.  
+## Packaging With TCLI
+
+The [PEAK BepInEx Template](<https://github.com/PEAKModding/BepInExTemplate>) comes with Thunderstore packaging built-in, using [TCLI](<https://github.com/thunderstore-io/thunderstore-cli>).
+
+If you used the template, you can build Thunderstore packages by running `dotnet build -c Release -target:PackTS`. The built package will be found at `artifacts/thunderstore/`.
+
+## Manual Packaging
+
+Create a new folder. Here we want to create a few files and one folder.  
 Your new mod folder should look like this:
 
 ```
@@ -114,14 +121,7 @@ If you're unsure, **MIT** is a safe and popular choice for mods.
 Not including a LICENSE file means your mod defaults to **All Rights Reserved** — others cannot legally use, share, or remix it.
 :::
 
-## Packaging and uploading
-
-To upload a mod, first create a Thunderstore team by logging in and going here:  
-https://thunderstore.io/settings/teams/create/
-
-:::tip
-Once a mod is uploaded, your Thunderstore team **cannot** be deleted or renamed — choose carefully!
-:::
+### Making a ZIP
 
 Now zip up your contents.
 
@@ -131,6 +131,15 @@ Instead, select all files inside and compress them.
 On Windows:
 - Select all files
 - Right-click → Send to → Compressed (zipped) folder
+
+## Uploading to Thunderstore
+
+To upload a mod, first create a Thunderstore team by logging in and going here:  
+https://thunderstore.io/settings/teams/create/
+
+:::tip
+Once a mod is uploaded, your Thunderstore team **cannot** be deleted or renamed — choose carefully!
+:::
 
 Then go to: [Thunderstore Upload Page](https://thunderstore.io/c/peak/create/)
 
@@ -142,6 +151,11 @@ Then go to: [Thunderstore Upload Page](https://thunderstore.io/c/peak/create/)
 
 If your mod is NSFW, make sure to mark it.
 
+:::danger
+Skipping steps can cause your mod upload to fail.  
+If it's rejected by moderation, visit the `#rejected-uploads` channel in the Discord server to appeal.
+:::
+
 ## Get the Modder Role
 
 Want that shiny **Modder** role in the [PEAK Modding server](https://discord.gg/SAw86z24rB)?
@@ -151,11 +165,6 @@ Just do the following:
 - Go to `#mod-releases`
 - Post your mod
 - Wait for the role to be assigned (if applicable)
-
-:::danger
-Skipping steps can cause your mod upload to fail.  
-If it's rejected by moderation, visit the `#rejected-uploads` channel in the Discord server to appeal.
-:::
 
 <LinkCard
   title="Updating"
