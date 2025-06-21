@@ -1,0 +1,113 @@
+---
+title: Writing Code
+description: Step 2 of making a mod is coding it!
+sidebar:
+  order: 2
+---
+
+import { LinkCard, LinkButton, FileTree } from '@astrojs/starlight/components';
+
+:::note
+Make sure you have [created a project](/creating-a-mod/creating-a-project). Once you have a project, you can start coding!
+:::
+
+You should have a project that looks like this:
+
+<FileTree>
+- CHANGELOG.md
+- Config.Build.user.props.template
+- Directory.Build.props
+- Directory.Build.targets
+- icon.png
+- LICENSE
+- PeakMod.sln
+- README.md
+- src
+  - PeakMod
+    - PeakMod.csproj
+    - **Plugin.cs**
+    - thunderstore.toml
+</FileTree>
+
+:::tip
+The `Plugin.cs` file contains your code while the `csproj`, `props`, and `targets` files are for build configuration. You can look inside all of the files and look for comments that explain what everything does.
+:::
+
+Open the project in your IDE of choice where the `.sln` file is, and then open the `Plugin.cs` file. It should look something like this:
+
+```cs title="Plugin.cs"
+using BepInEx;
+using BepInEx.Logging;
+
+namespace PeakMod;
+
+// Here are some basic resources on code style and naming conventions to help
+// you in your first CSharp plugin!
+// https://learn.microsoft.com/en-us/dotnet/csharp/fundamentals/coding-style/coding-conventions
+// https://learn.microsoft.com/en-us/dotnet/csharp/fundamentals/coding-style/identifier-names
+// https://learn.microsoft.com/en-us/dotnet/standard/design-guidelines/names-of-namespaces
+
+// This BepInAutoPlugin attribute comes from the Hamunii.BepInEx.AutoPlugin
+// NuGet package, and it will generate the BepInPlugin attribute for you!
+// For more info, see https://github.com/Hamunii/BepInEx.AutoPlugin
+[BepInAutoPlugin]
+public partial class Plugin : BaseUnityPlugin
+{
+    internal static ManualLogSource Log { get; private set; } = null!;
+
+    private void Awake()
+    {
+        // BepInEx gives us a logger which we can use to log information.
+        // See https://lethal.wiki/dev/fundamentals/logging
+        Log = Logger;
+
+        // BepInEx also gives us a config file for easy configuration.
+        // See https://lethal.wiki/dev/intermediate/custom-configs
+
+        // We can apply our hooks here.
+        // See https://lethal.wiki/dev/fundamentals/patching-code
+
+        // Log our awake here so we can see it in LogOutput.log file
+        Log.LogInfo($"Plugin {Name} is loaded!");
+    }
+}
+```
+
+This is a very basic BepInEx 5 plugin. For more info, see BepInEx's own documentation: 
+
+<LinkButton
+  href="https://docs.bepinex.dev/articles/dev_guide/plugin_tutorial/2_plugin_start.html#plugin-structure"
+  variant="secondary"
+  icon="external">
+  Creating a new plugin project—Plugin structure
+</LinkButton>
+
+You can also follow the links to learn more about each thing mentioned:
+
+<LinkButton href="https://lethal.wiki/dev/fundamentals/logging" variant="minimal" icon="external">
+  Logging: lethal.wiki
+</LinkButton>
+<LinkButton href="https://lethal.wiki/dev/intermediate/custom-configs" variant="minimal" icon="external">
+  Custom Configs: lethal.wiki
+</LinkButton>
+<LinkButton href="https://lethal.wiki/dev/fundamentals/patching-code" variant="minimal" icon="external">
+  Patching Code: lethal.wiki
+</LinkButton>
+
+For patching/hooking methods, you can use [MonoMod](<https://github.com/MonoMod/MonoMod>) or [HarmonyX](<https://github.com/BepInEx/HarmonyX>). See [lethal.wiki](<https://lethal.wiki/dev/fundamentals/patching-code>) for more in-depth introductions on using them.
+
+:::note
+[MonoDetour](<https://github.com/MonoDetour/MonoDetour>) is also an option for hooking, but it's in pre-release state and therefore is not fit for production usage yet. You can find its documentation at https://monodetour.github.io/
+:::
+
+All of these libraries are compatible with each other as HarmonyX and MonoDetour simply use MonoMod.RuntimeDetour under the hood.
+
+## Writing Your First Hook
+
+TODO
+
+<LinkCard
+  title="Publishing Your Mod"
+  href="/creating-a-mod/packaging-and-publishing"
+  description="Upload your mod for everyone to download!"
+/>
