@@ -126,9 +126,20 @@ This file will copy your assembly files to a plugins directory and it can be use
 
 ### Thunderstore Packaging
 
-This template comes with Thunderstore packaging built-in, using [TCLI](<https://github.com/thunderstore-io/thunderstore-cli>). You should configure the `src/<project-name>/thunderstore.toml` file for your mod, such as setting the description for your mod.
+This template comes with Thunderstore packaging built-in, using [Thunderstore CLI](<https://github.com/thunderstore-io/thunderstore-cli>), aka TCLI. You should configure the `src/<project-name>/thunderstore.toml` file for your mod, such as setting the description for your mod.
 
-You can build Thunderstore packages by running `dotnet build -c Release -target:PackTS`. The built package will be found at `artifacts/thunderstore/`.
+You can build Thunderstore packages by running:
+
+```sh
+dotnet build -c Release -target:PackTS -v d
+```
+
+:::note
+You can learn about different build options with `dotnet build --help`.  
+`-c` is short for `--configuration` and `-v d` is `--verbosity detailed`.
+:::
+
+The built package will be found at `artifacts/thunderstore/`.
 
 You can also directly publish to Thunderstore by including `-property:PublishTS=true` in the command.
 

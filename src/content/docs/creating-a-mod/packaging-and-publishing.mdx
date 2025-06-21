@@ -16,7 +16,17 @@ Before uploading your mod, you need to have built it into a `.dll`.
 
 The [PEAK BepInEx Template](<https://github.com/PEAKModding/BepInExTemplate>) comes with Thunderstore packaging built-in, using [TCLI](<https://github.com/thunderstore-io/thunderstore-cli>).
 
-If you used the template, you can build Thunderstore packages by running `dotnet build -c Release -target:PackTS`. The built package will be found at `artifacts/thunderstore/`.
+If you used the template, you can build Thunderstore packages by running:
+```sh
+dotnet build -c Release -target:PackTS -v d
+```
+
+:::note
+You can learn about different build options with `dotnet build --help`.  
+`-c` is short for `--configuration` and `-v d` is `--verbosity detailed`.
+:::
+
+The built package will be found at `artifacts/thunderstore/`.
 
 Once you have the ZIP package, you can jump straight into [Uploading to Thunderstore](#uploading-to-thunderstore)!
 
@@ -30,9 +40,9 @@ Your new mod folder should look like this:
 - manifest.json
 - README.md
 - CHANGELOG.md
-- Icon.png
+- icon.png
 - plugins
-  - YourMod.dll
+  - com.github.YourAccount.YourMod.dll
 </FileTree>
 
 ### `manifest.json`
