@@ -10,13 +10,17 @@ export default defineConfig({
 	integrations: [
 		starlight({
 			title: 'PEAK Modding Wiki',
-			social: [{ icon: 'github', label: 'GitHub', href: 'https://github.com/PEAKModding' }],
+			social: [
+				{ icon: 'github', label: 'GitHub', href: 'https://github.com/PEAKModding' },
+				{ icon: 'discord', label: 'Discord', href: 'https://discord.gg/SAw86z24rB' }
+			],
 			editLink: {
 				baseUrl: "https://github.com/PEAKModding/PEAKModding.github.io/edit/main/"
 			},
-			customCss: [
-				'./src/styles/global.css'
-			],
+			customCss: ['./src/styles/global.css'],
+			expressiveCode: {
+				themes: ['dracula', 'one-light'],
+			},
 			plugins: [
 				starlightLinksValidator(),
 				starlightThemeObsidian({
