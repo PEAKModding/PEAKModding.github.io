@@ -1,20 +1,52 @@
 ---
-title: Updating
+title: Updating Your Package
 description: Step 4 of making a mod is updating it!
 sidebar:
   order: 4
 ---
 
-:::caution
-This page is for people that have uploaded their thunderstore mod.
-:::
+You have published your mod, great! But now you want to update it, but it's not obvious how to do so.
 
-Updating a mod is really easy! Just please make sure you 
-First go to your mainfest.json and change the version number:
-```json
+To update your mod, you need to simply change the version number in the Thunderstore package and upload the package, and it will be uploaded as a new version.
+
+## Updating Version (TCLI)
+
+If you used the [PEAK Modding BepInEx Template](<https://github.com/PEAKModding/BepInExTemplate>), you can update the `Version` property in your `csproj` file:
+
+```xml title="csproj" {7} del="1.0.0" ins="1.1.0"
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <AssemblyName>com.github.YourAccount.ModName</AssemblyName>
+    <AssemblyTitle>ModName</AssemblyTitle>
+    <Version>1.0.01.1.0</Version>
+  </PropertyGroup>
+  ...
+</Project>
+
+```
+
+This property is used in the template when calling [TCLI](<https://github.com/thunderstore-io/thunderstore-cli>) to build or publish the package so the package always gets the correct version:
+
+```xml title="Directory.Build.targets" "Version"
+<Project>
+  ...
+  <Target Name="PackTS" ...>
+    ...
+    <Exec Command="dotnet tcli $(BuildArgument) --package-version $(Version)" />
+  </Target>
+</Project>
+```
+
+## Updating Version Manually
+
+Edit your `manifest.json` file and change the version number:
+
+```json title="manifest.json" {3} del="1.0.0" ins="1.1.0"
 {
   "name": "Your_mod_name",
-  "version_number": "1.1.0",
+  "version_number": "1.0.01.1.0",
   "website_url": "https://peakmodding.github.io",
   "description": "A mod description",
   "dependencies": []
