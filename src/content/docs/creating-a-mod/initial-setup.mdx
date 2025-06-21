@@ -5,7 +5,7 @@ sidebar:
   order: 0
 ---
 
-import { LinkCard } from '@astrojs/starlight/components';
+import { LinkCard, Tabs, TabItem, Steps } from '@astrojs/starlight/components';
 
 Modding might sound complicated, but it's much easier if you start with the right mindset and a simple mod.
 
@@ -32,13 +32,29 @@ This guide will not cover setting up your IDE. If you're stuck at this point, tr
 
 ## Installing BepInEx
 
+### Mod Manager (Recommended)
+
+<Steps>
+1.  <Tabs syncKey="os">
+      <TabItem label="Windows">
+        Download Gale from [Thunderstore](<https://thunderstore.io/c/peak/p/Kesomannen/GaleModManager/>).
+        Open the ZIP file and launch `Gale_1.x.x_x64_en-US.msi` and follow the standard installation steps.
+      </TabItem>
+      <TabItem label="Linux">
+        Install Gale by downloading the correct package for your system from the [GitHub releases](<https://github.com/Kesomannen/gale/releases>). Then install the package.
+      </TabItem>
+    </Tabs>
+2. Open Gale and select "Peak" as the game from the top left, and then you can install Thunderstore mods for the game.
+Select BepinexExPack PEAK (pin on top on the list) and install it. You can now launch the game from the button on the top left with BepInEx!
+</Steps>
+
+### Manual
+
 Install the PEAK-specific version of BepInEx from Thunderstore.  
 You can download it from [here](https://thunderstore.io/c/peak/p/BepInEx/BepInExPack_PEAK/).
 
 Unzip the BepInEx download, then copy all of its contents into PEAK’s game directory. You can find the game folder by going to:  
 `Steam > Library > PEAK > Manage > Browse local files`
-
-**Note: Mod managers currently don’t support PEAK, so manual installation is required. – 20ᵗʰ June 2025**
 
 After copying the files, launch the game once so BepInEx can generate the necessary configuration files. You can then safely close the game.
 
