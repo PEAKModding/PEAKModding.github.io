@@ -1,0 +1,87 @@
+---
+title: ContentRegistry
+description: A registry to see which mod owns which piece of content.
+sidebar:
+  order: 10
+---
+
+import { Card, CardGrid } from '@astrojs/starlight/components';
+import { Aside } from '@astrojs/starlight/components';
+
+#### A registry to see which mod owns which piece of content.
+The `ContentRegistry` is a static class that acts as a central database for all custom content loaded by PEAKLib. Its primary role is to keep track of which mod owns which piece of content.
+
+| Member | Description |
+|----------|----------|
+| `Register<T>(T, ModDefinition)` (static method) | The base method for registering content. Typically called from a content-specific Register method. |
+| `IsRegistered(this IContent)` (extension method) | Checks if a piece of content has already been registered. |
+| `TryGetRegisteredContent<T>(...)` (extension method) | Attempts to get the `RegisteredContent<T>` wrapper for a piece of content. |
+
+
+<Aside type="caution">
+For the most part, you will not need to interact with the `ContentRegistry` directly. PEAKLib's other systems (like `BundleLoader` and `ModDefinition`) handle the registration process for you. This documentation is for advanced use cases, such as creating compatibility with other mods.
+</Aside>
+
+## Core Purpose
+
+The registry allows you to look up a piece of content (like an item or status effect) and find out which `ModDefinition` it belongs to. This is incredibly useful for creating "synergy" effects between different mods.
+
+## Using the Registry
+
+The registry's methods are exposed as extension methods for any object that implements the `IContent` interface.
+
+### `IsRegistered()`
+
+Checks if a piece of content has been successfully registered.
+
+```csharp
+// Assuming 'myCustomItem' is an IContent object
+if (myCustomItem.IsRegistered())
+{
+    Logger.LogInfo($"{myCustomItem.Name} has been registered!");
+}
+```
+
+### `TryGetRegisteredContent<T>(...)`
+This is the most useful method for compatibility. It attempts to get the `RegisteredContent<T>` wrapper for a piece of content, which contains both the content itself and its owning ModDefinition.
+
+
+### Example: Creating Item Synergy
+Imagine your mod adds a "Fire Ring" item. You want it to have a special bonus effect if the player is also holding the "Ice Amulet" from another mod.
+
+```csharp
+using PEAKLib.Core;
+using PEAKLib.Items; // Assuming the other mod uses PEAKLib.Items
+
+public class FireRingSynergyChecker
+{
+    public void CheckForSynergy()
+    {
+        // You first need a way to get a reference to the other mod's item content.
+        // This might involve looking it up by name from the game's ItemDatabase.
+        Item iceAmuletItem = ItemDatabase.Instance.GetItem("Ice Amulet");
+
+        if (iceAmuletItem == null) return; // The item doesn't exist.
+
+        // Create an ItemContent wrapper to interact with the registry
+        var iceAmuletContent = new ItemContent(iceAmuletItem);
+
+        // Now, use the registry to see who owns it
+        if (iceAmuletContent.TryGetRegisteredContent(out var registeredAmulet))
+        {
+            // We found it in the registry!
+            string ownerModId = registeredAmulet.Mod.Id;
+            Logger.LogInfo($"Ice Amulet is owned by: {ownerModId}");
+
+            // Check if it's owned by the specific mod we want to synergize with
+            if (ownerModId == "com.coolmodder.icemod")
+            {
+                Logger.LogInfo("Synergy activated! Granting fire resistance bonus.");
+                GrantFireResistance();
+            }
+        }
+    }
+
+    private void GrantFireResistance() { /* ... */ }
+}
+```

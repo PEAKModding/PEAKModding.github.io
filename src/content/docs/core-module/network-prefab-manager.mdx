@@ -1,0 +1,98 @@
+---
+title: NetworkPrefabManager
+description: Manages the registration and spawning of networked GameObjects.
+sidebar:
+  order: 25
+---
+
+import { Card, CardGrid } from '@astrojs/starlight/components';
+import { Aside } from '@astrojs/starlight/components';
+
+#### Manages the registration and spawning of networked GameObjects.
+The `NetworkPrefabManager` is a static class that manages the registration and instantiation of networked `GameObjects`.
+It replaces the game's default networking pool with a custom one that is aware of mod-added prefabs, preventing errors and ensuring your objects can be spawned by the host.\
+
+If you want to spawn a custom item, projectile, or any other object that needs to be visible to all players in a multiplayer session, you must use this manager.
+
+| Member | Description |
+|----------|----------|
+| `RegisterNetworkPrefab(ModDefinition, GameObject)` | Registers a prefab with a mod association. |
+| `RegisterNetworkPrefab(ModDefinition, string, GameObject)` | Registers a prefab with a mod association and a specified resource folder path (e.g., "0_Items/"). |
+| `TryRegisterNetworkPrefab(string, GameObject)` | Attempts to register a network prefab; returns false if the ID is already taken. |
+| `HasNetworkPrefab(string)` | Checks if a prefab with the given ID is registered. |
+| `TryGetNetworkPrefab(string, out GameObject)` | Attempts to retrieve a registered network prefab by its ID. |
+| `SpawnNetworkPrefab(...)` | Spawns a registered network prefab across the network. Must be called by the Master Client. |
+
+## Registering a Network Prefab
+
+Before you can spawn an object, you must register its prefab with the manager. This is typically done right after you load your AssetBundle.
+
+### `RegisterNetworkPrefab(...)`
+
+This is the primary method for registration. It takes your `ModDefinition` and the `GameObject` prefab as arguments.
+
+<Aside>
+PEAKLib automatically prefixes the prefab's name with your mod's unique ID to prevent conflicts with other mods. 
+`com.yourname.yourmod:MyAwesomeItem`
+</Aside>
+
+```csharp
+// In your BundleLoader callback
+this.LoadBundleAndContentsWithName("my-items.peakbundle", bundle =>
+{
+    // Load the prefab from the bundle
+    var myProjectilePrefab = bundle.LoadAsset<GameObject>("FlameProjectile");
+
+    // Register it with the NetworkPrefabManager
+    // The folder path is important for some game systems. Use "0_Items/" for items.
+    // For other objects, you can often leave it empty or use a custom path.
+    NetworkPrefabManager.RegisterNetworkPrefab(Definition, "MyProjectiles/", myProjectilePrefab);
+
+    Logger.LogInfo("FlameProjectile is now registered for network spawning!");
+});
+```
+
+## Spawning a Network Prefab
+Once registered, a prefab can be spawned by the Master Client (the host).
+
+### `SpawnNetworkPrefab(...)`
+This method instantiates the registered prefab across the network.
+
+Only the host (Master Client) can spawn new room objects. Any attempt to call this from a client will result in an error. Always check PhotonNetwork.IsMasterClient before calling this method.
+
+```csharp
+using Photon.Pun;
+using UnityEngine;
+
+public class MagicWand : ModItemComponent
+{
+    public void CastFireball()
+    {
+        // Ensure this code only runs on the player who owns the item
+        if (!photonView.IsMine)
+        {
+            return;
+        }
+
+        // The actual spawning must be requested from the host.
+        // A common pattern is to send an RPC to the host, who then calls SpawnNetworkPrefab.
+        // For simplicity, this example assumes the current player IS the host.
+        if (PhotonNetwork.IsMasterClient)
+        {
+            // The prefabId must match the name given during registration (ModID:PrefabName)
+            string prefabId = $"{Mod.Id}:FlameProjectile";
+            Vector3 spawnPosition = transform.position + transform.forward * 2f;
+            Quaternion spawnRotation = transform.rotation;
+
+            NetworkPrefabManager.SpawnNetworkPrefab(prefabId, spawnPosition, spawnRotation);
+        }
+    }
+}
+```
+
+## Helper Methods
+### `HasNetworkPrefab(string prefabId)`
+Checks if a prefab with the given ID (e.g., "com.yourname.mod:MyPrefab") is already registered.
+
+### `TryGetNetworkPrefab(string prefabId, out GameObject prefab)`
+Attempts to get the registered prefab GameObject by its ID.

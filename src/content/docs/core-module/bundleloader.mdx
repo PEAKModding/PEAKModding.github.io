@@ -1,0 +1,254 @@
+---
+title: BundleLoader
+description: Handles the asynchronous loading of AssetBundles.
+sidebar:
+  order: 5
+---
+
+import { Card, CardGrid } from '@astrojs/starlight/components';
+import { Aside } from '@astrojs/starlight/components';
+
+#### Handles the asynchronous loading of AssetBundles.
+The `BundleLoader` is a static class that handles the asynchronous loading of your Unity AssetBundles. It's designed to be efficient and easy to use, ensuring your custom assets are loaded into the game at the correct time.
+
+| Member | Description |
+|----------|----------|
+| `OnAllBundlesLoaded` | Fired once after all initial AssetBundles have been loaded by PEAKLib. |
+| `OnBundleLoaded` (event) | Fired for each individual AssetBundle as it finishes loading.|
+| `LoadBundleWithName(...)` (extension method) | Loads an AssetBundle asynchronously but does not register its contents automatically. |
+| `LoadBundleAndContentsWithName(...)` (extension method) | Loads an AssetBundle and automatically registers its contents. This is the recommended method. |
+| `LoadBundleFromPath(...)` (static method) | Loads an AssetBundle from an absolute file path without registering content. |
+| `LoadBundleAndContentsFromPath(...)` (static method) | Loads an AssetBundle from an absolute file path and registers its content. |
+
+<CardGrid>
+	<Card title="Asynchronous" icon="seti:pipeline">
+		Bundles are loaded in the background without freezing the game, with events to notify you when loading is complete.
+	</Card>
+	<Card title="Automatic Content Registration" icon="add-document">
+		When used correctly, it automatically finds and registers all your custom content (items, statuses, etc.) from within the bundle.
+	</Card>
+</CardGrid>
+
+## Loading Your Assets
+
+### `LoadBundleAndContentsWithName()`
+is the easiest and most common way to load your assets.
+This is an extension method for `BaseUnityPlugin` that loads an `AssetBundle` by its file name and automatically registers its content.
+
+<Aside>
+This method assumes your AssetBundle file (e.g., `myassets.peakbundle`) is located in the same directory as your plugin's DLL file.
+</Aside>
+
+```csharp
+using BepInEx;
+using PEAKLib.Core;
+using UnityEngine; // Required for GameObject
+
+[BepInPlugin("com.myname.myassetmod", "My Asset Mod", "1.0.0")]
+public class MyAssetMod : BaseUnityPlugin
+{
+    public static GameObject MyAwesomePrefab { get; private set; }
+
+    private void Awake()
+    {
+        // Get the ModDefinition first.
+        var modDefinition = ModDefinition.GetOrCreate(Info);
+
+        // Load the bundle.
+        this.LoadBundleAndContentsWithName("myassets.peakbundle", bundle =>
+        {
+            // This code runs AFTER the bundle has been successfully loaded.
+            Logger.LogInfo("myassets.peakbundle has been loaded and its contents registered!");
+
+            // Now you can safely load assets from the bundle.
+            MyAwesomePrefab = bundle.LoadAsset<GameObject>("MyAwesomePrefab");
+
+            if (MyAwesomePrefab != null)
+            {
+                Logger.LogInfo("Successfully loaded MyAwesomePrefab!");
+            }
+        });
+    }
+}
+```
+
+### `LoadBundleWithName(...)`
+Loads an AssetBundle but does not automatically register its content (ItemContent, StatusContent, etc.).\
+This is useful when you want to manually inspect or handle the content of a bundle before it's registered with the game. For example, you might want to load an asset, modify it in code, and then register it.
+
+```csharp
+private void Awake()
+{
+    // Load the bundle but delay content registration.
+    this.LoadBundleWithName("my_manual_content.peakbundle", bundle =>
+    {
+        Logger.LogInfo("Bundle loaded. Content is NOT registered yet.");
+
+        // Manually load and register a specific item.
+        var myItemContent = bundle.LoadAsset<UnityItemContent>("MySpecialItemContent");
+        if (myItemContent != null)
+        {
+            // Perform custom logic here before registering...
+            myItemContent.Register(Definition);
+            Logger.LogInfo("Manually registered MySpecialItemContent!");
+        }
+    });
+}
+```
+
+### `LoadBundleFromPath(...)`
+Same as LoadBundleWithName, but it loads the bundle from an absolute file path instead of searching for it within your plugin's directory. It also does not register content automatically.\
+Ideal for loading optional bundles, "plugin" bundles for your own mod, or assets from a shared directory outside your mod's folder.
+
+```csharp
+using System.IO;
+using BepInEx;
+
+private void Awake()
+{
+    // Define a path to an optional expansion bundle.
+    string expansionBundlePath = Path.Combine(Paths.PluginPath, "MyMod_Expansion", "expansion_assets.peakbundle");
+
+    if (File.Exists(expansionBundlePath))
+    {
+        Logger.LogInfo("Expansion bundle found! Loading...");
+        BundleLoader.LoadBundleFromPath(expansionBundlePath, bundle =>
+        {
+            Logger.LogInfo("Expansion assets loaded.");
+            // Manually handle the content from the expansion.
+            bundle.Mod.RegisterContent();
+        });
+    }
+}
+```
+
+### `LoadBundleAndContentsFromPath(...)`
+Loads an AssetBundle from an absolute file path and automatically registers all of its content.\
+A convenient method for loading bundles from a specific location when you want the standard, automatic content registration behavior.
+
+```csharp
+using System.IO;
+using BepInEx;
+
+private void Awake()
+{
+    // Load a required asset bundle from a known subdirectory.
+    string coreBundlePath = Path.Combine(Paths.PluginPath, "MyMod_Core", "core_assets.peakbundle");
+
+    if (File.Exists(coreBundlePath))
+    {
+        // Load the bundle and register its contents all at once.
+        BundleLoader.LoadBundleAndContentsFromPath(coreBundlePath, bundle =>
+        {
+            Logger.LogInfo("Core assets loaded and registered successfully!");
+        });
+    }
+    else
+    {
+        Logger.LogError("Core assets not found! The mod may not function correctly.");
+    }
+}
+```
+
+## Events
+The BundleLoader provides events you can subscribe to for more advanced control flow.
+
+### `OnAllBundlesLoaded`
+This static event fires once after all initial bundles queued by PEAKLib have finished loading. This is useful if you need to perform an action that depends on assets from multiple different mods or bundles.
+
+```csharp
+private void Awake()
+{
+    BundleLoader.OnAllBundlesLoaded += () =>
+    {
+        Logger.LogInfo("All PEAKLib mods have finished loading their initial assets!");
+        // Perform cross-mod compatibility checks or other global setup here.
+    };
+}
+```
+
+### `OnBundleLoaded`
+This static event fires for each individual bundle as it completes loading.
+
+```csharp
+private void Awake()
+{
+    BundleLoader.OnBundleLoaded += (peakBundle) =>
+    {
+        // This will be logged for every single bundle loaded by PEAKLib.
+        Logger.LogInfo($"A bundle was loaded for mod: {peakBundle.Mod.Name}");
+    };
+}
+```
+
+## Example
+**Comprehensive Example: Main Mod with an Optional Expansion**\
+This longer example demonstrates a practical scenario where you would use these methods together. We will create a "main" mod that loads its core assets, and then it will check for an optional "expansion" bundle that adds more content.
+
+```csharp
+using BepInEx;
+using PEAKLib.Core;
+using PEAKLib.Items; // For UnityItemContent
+using System.IO;
+using UnityEngine;
+
+[BepInPlugin("com.myname.mainmod", "My Main Mod", "1.0.0")]
+public class MainMod : BaseUnityPlugin
+{
+    public static ModDefinition Definition { get; private set; }
+    public static GameObject CoreItemPrefab { get; private set; }
+    public static GameObject? ExpansionItemPrefab { get; private set; } // Nullable because it's optional
+
+    private void Awake()
+    {
+        Definition = ModDefinition.GetOrCreate(Info);
+
+        // --- Step 1: Load the main bundle using the recommended method ---
+        // This bundle contains the core, required content for the mod.
+        this.LoadBundleAndContentsWithName("main_mod_core.peakbundle", OnCoreBundleLoaded);
+
+        // --- Step 2: Check for and load the optional expansion bundle ---
+        // We use LoadBundleFromPath because its location is specific and it's optional.
+        string expansionPath = Path.Combine(Paths.PluginPath, "MyMod_ExpansionPack", "expansion.peakbundle");
+        if (File.Exists(expansionPath))
+        {
+            Logger.LogInfo("Expansion Pack found! Loading additional content...");
+            // We use LoadBundleFromPath (not "AndContents") because we want to handle
+            // its content manually in the callback.
+            BundleLoader.LoadBundleFromPath(expansionPath, OnExpansionBundleLoaded);
+        }
+    }
+
+    /// <summary>
+    // This callback executes after the core bundle is loaded and its contents are registered.
+    /// </summary>
+    private void OnCoreBundleLoaded(PeakBundle bundle)
+    {
+        Logger.LogInfo("Main Mod: Core bundle loaded successfully.");
+        CoreItemPrefab = bundle.LoadAsset<GameObject>("CoreItemPrefab");
+    }
+
+    /// <summary>
+    // This callback executes if the optional expansion bundle is found and loaded.
+    /// </summary>
+    private void OnExpansionBundleLoaded(PeakBundle bundle)
+    {
+        Logger.LogInfo("Main Mod: Expansion bundle loaded. Manually processing content...");
+
+        // Here we demonstrate manually loading and registering a single item.
+        // This gives us fine-grained control over what gets added from the expansion.
+        var expansionItemContent = bundle.LoadAsset<UnityItemContent>("ExpansionItemContent");
+        if (expansionItemContent != null)
+        {
+            // We could add checks here, e.g., only register if a certain condition is met.
+            Logger.LogInfo("Registering ExpansionItemContent from the expansion pack...");
+            expansionItemContent.Register(Definition); // Manually register the content.
+            ExpansionItemPrefab = expansionItemContent.ItemPrefab;
+        }
+        else
+        {
+            Logger.LogWarning("Expansion bundle was loaded, but 'ExpansionItemContent' was not found inside.");
+        }
+    }
+}
+```

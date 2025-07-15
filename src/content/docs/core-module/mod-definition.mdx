@@ -1,0 +1,90 @@
+---
+title: ModDefinition
+description: Represents your mod's identity within PEAKLib.
+sidebar:
+  order: 15
+---
+
+import { Card, CardGrid } from '@astrojs/starlight/components';
+
+#### Represents your mod's identity within PEAKLib.
+The `ModDefinition` class is the heart of your mod's identity within PEAKLib. It acts as a central container for your mod's metadata and all the custom content you create.
+
+| Member | Description |
+|----------|----------|
+| `Id (property)` | The unique ID (GUID) of your mod.  |
+| `Name (property)` | The display name of your mod.   |
+| `Version (property)` | The `System.Version` of your mod. |
+| `Content (property)` | A `HashSet<IContent>` of all content associated with this mod. |
+| `RegisteredContent (property)` | An `IEnumerable<IRegisteredContent>` of all content from this mod that has been successfully registered with the game. |
+| `GetOrCreate(PluginInfo) (static method)` | Gets an existing or creates a new ModDefinition from BepInEx PluginInfo. This is the recommended way to get your mod's definition. |
+| `GetOrCreate(string, string, Version) (static method)` | Gets an existing or creates a new ModDefinition from raw ID, name, and version details. |
+| `TryGetMod(string, out ModDefinition) (static method)` | Attempts to find a ModDefinition by its ID. |
+| `RegisterContent() (method)` | Registers all unregistered content associated with this ModDefinition. |
+| `Register<T>(T) (method)` | A generic method to register a specific piece of content. |
+
+<CardGrid>
+	<Card title="Purpose" icon="document">
+		It uniquely identifies your mod using its GUID, name, and version, and tracks all associated content like items and status effects.
+	</Card>
+	<Card title="Creation" icon="add-document">
+		You should create one and only one `ModDefinition` instance for your entire mod, typically in your main plugin class's `Awake()` method.
+	</Card>
+</CardGrid>
+
+## Getting Your ModDefinition
+
+The recommended way to get your `ModDefinition` is by using the static `GetOrCreate()` method, passing your BepInEx `PluginInfo`.
+
+
+`PluginInfo` is available in any class that inherits from BepInEx's `BaseUnityPlugin` via the `Info` property.
+
+
+```csharp
+using BepInEx;
+using PEAKLib.Core;
+
+[BepInPlugin("com.yourname.yourmod", "Your Mod Name", "1.0.0")]
+public class YourPlugin : BaseUnityPlugin
+{
+    // It's a good practice to store it in a static property for easy access.
+    public static ModDefinition Definition { get; private set; }
+
+    private void Awake()
+    {
+        // This will either create a new definition or get the existing one.
+        Definition = ModDefinition.GetOrCreate(Info);
+        Logger.LogInfo($"{Definition.Name} v{Definition.Version} has been initialized!");
+    }
+}
+```
+
+### Key Properties
+Once you have your ModDefinition instance, you can access its properties.
+
+`string Id { get; }`\
+The unique GUID of your mod (e.g., "com.yourname.yourmod").
+
+`string Name { get; }`\
+The display name of your mod (e.g., "Your Mod Name").
+
+`Version Version { get; }`\
+The System.Version object representing your mod's version.
+
+`HashSet<IContent> Content { get; }`\
+A collection of all content associated with your mod. Content is added here automatically when you load it from an AssetBundle that has a UnityModDefinition.
+
+## Registering Content
+After your content has been loaded (usually via the BundleLoader), you need to register it with the game.
+
+### `RegisterContent()`
+This method iterates through all the content currently associated with your ModDefinition and registers any that haven't been registered yet. This is the simplest way to get all your content into the game.
+
+```csharp
+// In your BundleLoader callback, after the bundle is loaded:
+this.LoadBundleAndContentsWithName("my_bundle.peakbundle", bundle => {
+    // At this point, the content from the bundle is associated with the mod.
+    // Now, we register it.
+    bundle.Mod.RegisterContent();
+    Logger.LogInfo("All content from my_bundle has been registered!");
+});

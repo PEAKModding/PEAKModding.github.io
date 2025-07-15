@@ -1,0 +1,47 @@
+---
+title:  Networking
+description: Handles network communication, particularly for checking which mods the host is running
+sidebar:
+  order: 20
+---
+
+import { Card, CardGrid } from '@astrojs/starlight/components';
+import { Aside } from '@astrojs/starlight/components';
+
+#### Handles network communication, particularly for checking which mods the host is running
+The `Networking` class provides utilities for handling multiplayer compatibility, primarily by allowing clients to know which mods the host is running. This is essential for creating mods that have optional features or need to behave differently depending on the host's setup.
+
+
+| Member | Description |
+|----------|----------|
+| `HostPluginGuids` (property) | A read-only collection of the GUIDs of all plugins installed on the host's client. |
+| `AddHostHasPluginListeners(...)` (static method) | Adds persistent callbacks that are invoked whenever a new host is set, checking if that host has a specific plugin installed. |
+
+
+<Aside>
+The main purpose of this class is to enable "soft dependencies" or compatibility checks. It allows your mod to ask, "Does the host also have this mod installed?" and then change its behavior accordingly.
+</Aside>
+
+### `HostPluginGuids`
+
+A static, read-only collection of strings containing the GUIDs of all BepInEx plugins installed on the host's machine.
+
+```csharp
+// Example: Checking if the host has a specific mod installed
+if (Networking.HostPluginGuids.Contains("com.anothermod.coolfeatures"))
+{
+    Logger.LogInfo("Host has the Cool Features mod! Enabling synergy effects.");
+    EnableSynergy();
+}
+```
+
+### `AddHostHasPluginListeners(...)`
+This is the most robust way to handle compatibility. It adds persistent listeners that are automatically invoked whenever a new host is detected (e.g., on joining a lobby or during a host migration).
+
+The method takes three arguments:
+
+string `pluginGuid`: The GUID of the plugin you want to check for.
+
+Action `onHasPlugin`: A callback that runs if the host has the plugin.
+
+Action `onNoPlugin`: A callback that runs if the host does not have the plugin.
