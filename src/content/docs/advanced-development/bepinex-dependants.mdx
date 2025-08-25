@@ -1,0 +1,73 @@
+---
+title: BepInEx Dependencies
+description: You can easily learn how to make dependencies!
+sidebar:
+  order: 2
+---
+
+import { LinkCard, LinkButton, FileTree } from '@astrojs/starlight/components';
+
+:::note
+This guide assumes you have a setup BepInEx plugin to use.
+:::
+
+Does your mod rely on another mod to function? Or do you want your mod to load after another mod? BepInDependacies are where you come in luck!
+These are really simple to get the grasp of, so let's get to the hardest part which is still very easy!
+
+## Getting a mod GUID
+
+:::caution
+If a mod GUID changes, you will have to re-find the mod GUID and update your mod accordingly.
+:::
+
+To depend on a mod, you need the GUID of it. Most of the time, this is easy to find. For this example, we will go through PEAKLib.Core.
+
+<LinkCard
+  title="PEAKLib.Core Source"
+  href="https://thunderstore.io/c/peak/p/PEAKModding/PEAKLib_Core/source"
+  description="The source code of PEAKLib."
+/>
+
+Ok there are a couple ways to do this, we will start with Method 1.
+
+### Method 1
+
+Go to the source tab on thunderstore of the desired mod. Then, use the find feature of your browser.
+
+:::note
+For windows 10 and 11 use **CTRL + F**
+:::
+
+Then search for `BepInPlugin`. Then look until you find something like this:
+
+```c# title="PEAKLib.Core Source"
+[BepInPlugin("com.github.PEAKModding.PEAKLib.Core", "PEAKLib.Core", "1.2.0")]
+```
+
+The first string is what we are after. So copy `com.github.PEAKModding.PEAKLib.Core` to your clipboard.
+The mod GUID will be different for every mod, so check what yours is. If you successfully have the mod GUID you can skip Method 2.
+
+### Method 2
+
+:::caution
+Only try this if Method 1 did not work for you.
+:::
+
+Still stay on the source tab of the mod, we are still going to use the find/search feature. This method is a bit more unreliable.
+This time we are going to search for `com.`, this is because most mod GUID's use this formatting. **If you still cannot find it try using your own knowledge or asking people for help in the discord.**
+
+## Coding the dependency
+
+Now this is really simple. All you have to do is add one line below your BepInPlugin. Just replace `com.github.PEAKModding.PEAKLib.Core` with the GUID you got from the mod.
+
+```c# title="Plugin.cs"
+[BepInPlugin("com.yourname.yourmod", "Your Mod Name", "1.0.0")]
+[BepInDependency("com.github.PEAKModding.PEAKLib.Core", BepInDependency.DependencyFlags.HardDependency)]
+```
+
+The final step is deciding whether your dependency should be a HardDependency or a SoftDependency.
+
+Here’s how to choose:
+
+- **`HardDependency`** → Your mod cannot function without the other mod.
+- **`SoftDependency`** → Your mod works fine without it, but if the other mod is present, yours will load after it.

@@ -41,6 +41,39 @@ export default defineConfig({
 					label: "Creating a Mod",
 					autogenerate: { directory: "creating-a-mod" },
 				},
+				{
+					label: "Advanced Development",
+					autogenerate: { directory: "advanced-development" },
+				},
+				{
+					label: "PEAKLib",
+					items: [
+						{
+							label: "Core",
+							items: [
+								{ label: "Under Construction", link: "/peaklib/core/under-construction" },
+							],
+						},
+						{
+							label: "Items",
+							items: [
+								{ label: "Under Construction", link: "/peaklib/items/under-construction" },
+							],
+						},
+						{
+							label: "UI",
+							items: [
+								{ label: "Under Construction", link: "/peaklib/ui/under-construction" },
+							],
+						},
+						{
+							label: "Stats",
+							items: [
+								{ label: "Under Construction", link: "/peaklib/stats/under-construction" },
+							],
+						}
+					],
+				},
 			],
 		}),
 	],
