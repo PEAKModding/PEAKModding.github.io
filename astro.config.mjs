@@ -46,35 +46,13 @@ export default defineConfig({
 					autogenerate: { directory: "advanced-development" },
 				},
 				{
-					label: "PEAKLib",
-					items: [
-						{
-							label: "Core",
-							items: [
-								{ label: "Under Construction", link: "/peaklib/core/under-construction" },
-							],
-						},
-						{
-							label: "Items",
-							items: [
-								{ label: "Under Construction", link: "/peaklib/items/under-construction" },
-							],
-						},
-						{
-							label: "UI",
-							items: [
-								{ label: "Under Construction", link: "/peaklib/ui/under-construction" },
-							],
-						},
-						{
-							label: "Stats",
-							items: [
-								{ label: "Under Construction", link: "/peaklib/stats/under-construction" },
-							],
-						}
-					],
+					label: "Content Creation",
+					autogenerate: { directory: "content-creation" },
 				},
 			],
 		}),
 	],
+	// Whenever a page changes, add it to the redirects.
+	// https://docs.astro.build/en/guides/routing/#redirects
+	redirects: { }
 });

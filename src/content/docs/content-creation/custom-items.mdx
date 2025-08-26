@@ -1,0 +1,163 @@
+---
+title: Custom Items
+description: Learn to make custom items with PEAKLib.
+sidebar:
+  order: 1
+---
+
+import { Badge, Steps, LinkButton } from '@astrojs/starlight/components';
+
+| Project Info | |
+| --- | --- |
+| Coding | <Badge text="Optional" variant="success" /> |
+| Unity | <Badge text="Required" variant="danger" /> |
+| Project Setup | <Badge text="Time-Consuming" variant="danger" /> |
+| Modding Libraries | <Badge text="PEAKLib.Items" /> |
+
+Creating custom items involves structuring and configuring your item assets in Unity and using PEAKLib to register them with the game.
+
+## Set Up a Unity Project
+
+<Steps>
+1. [Rip the game into a Unity project](/content-creation/ripping-peak) (this is easily the most painful step in the whole process)
+
+3. Download the latest [PEAKLib.UnityReferences](https://github.com/PEAKModding/PEAKLib/releases/latest) package from GitHub
+
+    :::note
+    This package contains assemblies that are different from what is shipped on Thunderstore. These only reference assemblies which Unity already knows about to make the project setup as easy and painless as possible.
+    :::
+
+4. Extract it somewhere in the `Assets/` directory of your Unity project
+
+5. You should not see any errors in your Unity project at this point (and if you do, they should be about file names that only differ in casing, which should only appear if your file system is case-sensitive which is most likely the case if you are on Linux). If you have other errors, you should ask for help or start over and follow the instructions more closely.
+</Steps>
+
+We rip the game into a Unity project so that making items is considerably easier as the project comes with a lot of metadata from the game, such as layers, tags and shader names, which we all need to match with how the game expects things to be.
+
+## Create an Item
+
+<Steps>
+1. Find some Item prefab in the game and copy paste it somewhere, e.g. `Assets/_Mod/`
+    :::tip
+    It is best to not do any modifications to it until you've successfully loaded this copy in game.
+    This is to help with debugging if the item doesn't work. If it stops working, you know what you did for it to stop working.
+    :::
+
+2. To inform PEAKLib.Items to register your item, right click in files in Unity and select `Create` → `PEAKLib` → `ItemContent`.
+
+3. In the inspector for `ItemContent`, set `Item Prefab` to the prefab you copied
+
+    :::note
+    The item prefab should have the `Item` component on its root GameObject.
+    :::
+
+4. At the very bottom of the inspector for `ItemContent`, set `AssetBundle` to your bundle, e.g. `myitem.peakbundle`, or if you do not have a BepInEx plugin, `myitem.autoload_peakbundle`.
+
+    :::caution
+    If you **do not** have a BepInEx plugin to load your item mod when the game loads, give the bundle an `.autoload_peakbundle` extension so PEAKLib.Core will load it automatically.  
+    If you have a BepInEx plugin to load your item mod, it is **heavily** recommended to load the asset bundle manually.
+    :::
+
+5. If you **do not** have a BepInEx plugin to load your item mod when the game loads, select
+`Create` → `PEAKLib` → `ModDefinition` and fill the information for your mod, and assign it to the `AssetBundle` from the previous step.  
+
+    :::caution
+    If you have a BepInEx plugin to load your item mod, the BepInEx plugin's information will be used and you must ignore this step or an error will be thrown when trying to load the asset bundle manually using PEAKLib.Core's BundleLoader.
+    :::
+</Steps>
+
+After you've finished the next section to make sure you've done everything correctly, you can get to modifying the prefab to be yours.
+
+## Register Your Item
+
+<Steps>
+1. Build your Asset Bundle and place it in `BepInEx/plugins/`. If you **do not** have a plugin to load your asset bundle, ensure the file name ends in `.autoload_peakbundle`, and then you are done! If you have a plugin to load your asset bundle, continue as normal.
+
+2. In your BepInEx plugin project, open the `csproj` file and reference PEAKLib.Items
+
+    ```xml title="csproj" ins={4-6}
+    <Project Sdk="Microsoft.NET.Sdk">
+      ...
+
+      <ItemGroup>
+        <PackageReference Include="PEAKModding.PEAKLib.Items" Version="*" />
+      </ItemGroup>
+
+    </Project>
+    ```
+
+3. Add `BepInDependency` attributes to your plugin and load the bundle in your `Awake` method
+    ```cs title="Plugin.cs" ins={8-9, 18-31}
+    using BepInEx;
+    using BepInEx.Logging;
+    using PEAKLib.Core;
+
+    namespace MyItemMod;
+
+    [BepInAutoPlugin]
+    [BepInDependency(ItemsPlugin.Id)] // PEAKLib.Items
+    [BepInDependency(CorePlugin.Id)] // PEAKLib.Core, a dependency of PEAKLib.Items
+    public partial class Plugin : BaseUnityPlugin
+    {
+        internal static ManualLogSource Log { get; private set; } = null!;
+
+        void Awake()
+        {
+            Log = Logger;
+
+            // Load an asset bundle with the specified the name.
+            // It must be within the same directory as the plugin assembly,
+            // or within a subdirectory.
+            // Note: this is an extension method from PEAKLib.Core.BundleLoader
+            this.LoadBundleWithName(
+                "myitem.peakbundle",
+                peakBundle =>
+                {
+                    // Register all PEAKLib content in the asset bundle
+                    peakBundle.Mod.RegisterContent();
+                }
+            );
+
+            Log.LogInfo($"Plugin {Name} is loaded!");
+        }
+    }
+    ```
+4. Build your BepInEx plugin and place it next to your asset bundle in `BepInEx/plugins`.
+5. Run the game and confirm your bundle was loaded.  
+    In your BepInEx logs, you should see something like:  
+    `[Info   :PEAKLib.Core] Loading bundle at '...\BepInEx\plugins\myitem.peakbundle'...`  
+    and a bit later:  
+    `[Info   :PEAKLib.Core] Loaded bundle myitem.peakbundle in 5.1s`
+6. If your item should have custom behavior, you can attach your MonoBehaviour scripts once the bundle is loaded:
+    ```cs
+    this.LoadBundleWithName(
+        "myitem.peakbundle",
+        peakBundle =>
+        {
+            // Get item prefab
+            var testBallContent = peakBundle.LoadAsset<UnityItemContent>("TestBallContent");
+            var testBallPrefab = testBallContent.ItemPrefab;
+
+            // Attach custom behavior
+            testBallPrefab.AddComponent<TestBall>();
+
+            // Attach custom action
+            var action = testBallPrefab.AddComponent<Action_TestBallRecolor>();
+            action.OnCastFinished = true;
+
+            // Register all PEAKLib content in the asset bundle
+            peakBundle.Mod.RegisterContent();
+        }
+    );
+    ```
+    This example is taken from [PEAKLib.Tests/Plugin.cs](https://github.com/PEAKModding/PEAKLib/blob/main/tests/PEAKLib.Tests/Plugin.cs) (and slightly modified).
+    :::caution
+    Alternatively you can include your mod assembly somewhere in `Assets/` of your Unity project, but doing so may require adding many reference assemblies to your Unity project which your plugin depends on. While this may work fine, it may make Unity more unstable. You can disable reference validation for your assembly in Unity, although it may not always work for allowing to use MonoBehaviours from your assembly.
+
+    Additionally, this does not work well with reloading your mod in the game as Unity looks for an assembly with a matching name when loading an asset bundle. In this case the assembly name has changed from what was used when building the asset bundle.
+
+    This is because unloading specific assemblies is not possible under the runtime Unity uses, which is a fork of Mono. Therefore plugins which allow reloading mods ([AutoReload](https://thunderstore.io/c/peak/p/Hamunii/AutoReload/), [ScriptEngine](https://github.com/BepInEx/BepInEx.Debug#scriptengine)) load the assembly with a different name instead, which breaks the ability for Unity to find the new version of the assembly which was loaded.
+
+    Also note that you can not add C# scripts in Unity and reference those since Asset Bundles can't contain scripts. This is a safety feature.
+    :::
+</Steps>

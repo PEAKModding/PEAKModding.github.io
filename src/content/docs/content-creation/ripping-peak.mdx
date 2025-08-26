@@ -1,0 +1,65 @@
+---
+title: Ripping PEAK Unity Project
+description: Learn how to rip PEAK into a Unity project to allow custom creation using Unity.
+sidebar:
+  order: 0
+---
+
+import { Badge, LinkCard, LinkButton, FileTree } from '@astrojs/starlight/components';
+
+Ripping PEAK into a Unity project is required to allow certain custom creation using Unity.
+
+We are currently lacking a PEAK Unity Project Patcher to automate this process.
+For now we must do things manually to get a semi complete rip of the game.
+The process is potentially painful and time-consuming.
+
+:::caution
+Make sure to follow the instructions as closely as possible for the highest chance of success.
+Do not skip steps or do them out of order.
+
+The process would be considerably easier and less painful with a Unity project patcher like this: [R.E.P.O. Project Patcher](https://github.com/Kesomannen/unity-repo-project-patcher).
+:::
+
+Follow the steps in this message directly to get a semi complete version of the PEAK game:
+
+<LinkCard
+  title="See instructions on the PEAK Modding Server on Discord"
+  href="https://discord.com/channels/1363179626435707082/1386691783584387244/1388600351338532926"
+  description="This takes you to a specific message in the PEAK Modding server"
+/>
+
+Or you can see a copy of the message here:
+
+> ## How to Get a Working Unity Rip of Peak
+> What we know so far
+> - Rip the game with [Asset Ripper **Version 1.1.13 Specifically**](https://github.com/AssetRipper/AssetRipper/releases/tag/1.1.13)
+> - Open the Unity Project using **Unity 6000.0.36f1**
+> - Delete only the Ripped Plugins in `Assets/Plugins` starting with the name `Unity` and manually re-add them through the package manager. It's possible you may have some of these packages already installed. What to search for in the package manager in the Unity Registry:
+>   - Addressables
+>   - AI Navigation
+>   - Animation Rigging
+>   - Burst
+>   - Collections
+>   - Input System
+>   - Localization
+>   - Mathematics
+>   - Memory Profiler
+>   - Multiplayer Center
+>   - Multiplayer Play Mode
+>   - Unity Transport
+>   - Unity Profiling Core API
+>   - Universal RP
+>   - Scriptable Build Pipeline
+>   - Authentication
+>   - Multiplayer Services
+>   - Splines
+>   - Timeline
+>   - Visual Effect Graph
+> - In the Package manager, hit the Plus in the top left and select `Install Package from Git URL` and paste in `https://github.com/Unity-UI-Extensions/com.unity.uiextensions.git` to install the UI Extensions package
+>   - If prompted, answer `Yes, for these and other files that might be found later`
+> - Delete all instances of `UnitySourceGeneratedAssemblyMonoScriptTypes`
+>   - There is one in `Assets\Plugins\Assembly-CSharp-firstpass\`
+>   - The other is in `Assets\Scripts\Assembly-CSharp\`
+> - **Restart Your Unity Project!**
+>
+> *This will be update with more steps in the future as they are learned*
