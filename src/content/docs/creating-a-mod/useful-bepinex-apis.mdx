@@ -1,0 +1,87 @@
+---
+title: Useful BepInEx APIs
+description: Learn about useful BepInEx APIs you can use!
+sidebar:
+  order: 2.5
+---
+
+import { LinkCard, LinkButton, FileTree } from '@astrojs/starlight/components';
+
+On this page we have collected some common and useful BepInEx APIs.
+
+## Custom Configs
+
+The most basic example of using config files will look something like this:
+
+```cs title="Plugin.cs"
+// ...in your Plugin class
+void Awake()
+{
+    // We bind our settings to the config file provided by our plugin instance,
+    // and we store the bound config entries in our variables
+    var configGreeting = base.Config.Bind(
+        "General",                          // Config section
+        "GreetingText",                     // Key of this config
+        "Hello, world!",                    // Default value
+        "Greeting text upon game launch"    // Description
+    );
+
+    var configDisplayGreeting = base.Config.Bind(
+        "General.Toggles",                  // Config subsection
+        "DisplayGreeting",                  // Key of this config
+        true,                               // Default value
+        "To show the greeting text"         // Description
+    );
+
+    // We can then access the values of the config entries with `.Value`
+    if(configDisplayGreeting.Value)
+        Logger.LogInfo(configGreeting.Value);
+}
+```
+
+<LinkCard
+  title="Learn More"
+  href="https://lethal.wiki/dev/intermediate/custom-configs"
+  description="See lethal.wiki documentation: Using configuration files"
+  target="_blank"
+/>
+
+<LinkCard
+  title="API Reference"
+  href="https://docs.bepinex.dev/api/BepInEx.Configuration.ConfigFile.html"
+  description="See BepInEx API documentation: Class ConfigFile"
+  target="_blank"
+/>
+
+## Marking Dependencies
+
+If your plugin depends on another BepInEx plugin, use the `BepInDependency` attribute to mark it so BepInEx loads your plugin after it.
+
+Example:
+```cs title="Plugin.cs"
+// Option 1: Using const string field on dependency Plugin class
+[BepInDependency(PEAKLib.Items.ItemsPlugin.Id)]
+// Option 2: Using string provided to BepInPlugin by the dependency Plugin class
+[BepInDependency("com.github.PEAKModding.PEAKLib.Items")]
+[BepInAutoPlugin]
+public partial class Plugin : BaseUnityPlugin
+// ...
+```
+
+If your plugin soft depends on the other plugin, use the overload which can be provided the dependency type:
+```cs
+[BepInDependency(PEAKLib.Items.ItemsPlugin.Id, DependencyFlags.SoftDependency)]
+```
+
+This will make your plugin always load whether or not the dependency is present, but will tell BepInEx to load your plugin after it if it exists. For how to soft depend on a mod, see [RoR2 Modding Wiki: Mod Compatibility: Soft Dependency](https://risk-of-thunder.github.io/R2Wiki/Mod-Creation/C%23-Programming/Mod-Compatibility%3A-Soft-Dependency/) (in which case you may want to depend on [SoftDependencyFix](https://thunderstore.io/c/peak/p/PEAKModding/SoftDependencyFix/))
+
+Most plugins should have a `const string` field named `Id` in their Plugin class which by default is the assembly name when they are using [BepInAutoPlugin](https://github.com/Hamunii/BepInEx.AutoPlugin). BepInAutoPlugin generates this field.
+
+If you can't find the dependency Id, open the decompiled source of the assembly, and `Ctrl+F` search `BepInPlugin` or `BaseUnityPlugin` to find the plugin, and see what string is provided to the `BepInPlugin` attribute.
+
+<LinkCard
+  title="API Reference"
+  href="https://docs.bepinex.dev/api/BepInEx.BepInDependency.html#BepInEx_BepInDependency_Flags"
+  description="See BepInEx API documentation: Class BepInDependency"
+  target="_blank"
+/>

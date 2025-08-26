@@ -42,10 +42,6 @@ export default defineConfig({
 					autogenerate: { directory: "creating-a-mod" },
 				},
 				{
-					label: "Advanced Development",
-					autogenerate: { directory: "advanced-development" },
-				},
-				{
 					label: "Content Creation",
 					autogenerate: { directory: "content-creation" },
 				},
