@@ -4,10 +4,11 @@
     "": {
       "name": "peakmodding-github-io",
       "dependencies": {
-        "@astrojs/starlight": "^0.35.1",
-        "astro": "^5.12.1",
-        "sharp": "^0.32.5",
-        "starlight-links-validator": "^0.17.0",
+        "@astrojs/starlight": "^0.35.2",
+        "@fontsource/darumadrop-one": "^5.2.6",
+        "astro": "^5.13.3",
+        "sharp": "^0.32.6",
+        "starlight-links-validator": "^0.17.1",
         "starlight-theme-obsidian": "^0.3.2",
       },
     },
@@ -102,6 +103,8 @@
     "@expressive-code/plugin-shiki": ["@expressive-code/plugin-shiki@0.41.2", "", { "dependencies": { "@expressive-code/core": "^0.41.2", "shiki": "^3.2.2" } }, "sha512-xD4zwqAkDccXqye+235BH5bN038jYiSMLfUrCOmMlzxPDGWdxJDk5z4uUB/aLfivEF2tXyO2zyaarL3Oqht0fQ=="],
 
     "@expressive-code/plugin-text-markers": ["@expressive-code/plugin-text-markers@0.41.2", "", { "dependencies": { "@expressive-code/core": "^0.41.2" } }, "sha512-JFWBz2qYxxJOJkkWf96LpeolbnOqJY95TvwYc0hXIHf9oSWV0h0SY268w/5N3EtQaD9KktzDE+VIVwb9jdb3nw=="],
+
+    "@fontsource/darumadrop-one": ["@fontsource/darumadrop-one@5.2.6", "", {}, "sha512-rczQLy2IB2gWajW7gGr0hkvKCZE8/ltN0aakn+Cr5t2P+lg2eoYeyWM1H853d4Vi/G+VnsrHEmyKdFL37D+x0A=="],
 
     "@img/sharp-darwin-arm64": ["@img/sharp-darwin-arm64@0.33.5", "", { "optionalDependencies": { "@img/sharp-libvips-darwin-arm64": "1.0.4" }, "os": "darwin", "cpu": "arm64" }, "sha512-UT4p+iz/2H4twwAoLCqfA9UH5pI6DggwKEGuaPy7nCVQ8ZsiY5PIcrRvD1DzuY3qYL07NtIQcWnBSY/heikIFQ=="],
 

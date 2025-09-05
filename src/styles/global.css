@@ -1,5 +1,46 @@
-:root {
+:root{
     --sl-content-width: 50rem;
+}
+
+:root[data-theme='dark'] {
+    /* Dark mode colors. */
+    --sl-color-bg: #16161f;
+    --sl-color-text-accent: #d27fdf;
+    --sl-color-hairline-shade: #2d273b;
+    --sl-badge-default-bg: var(--sl-color-blue-low);
+}
+
+/* The following colors are copied from:
+https://starlight.astro.build/guides/css-and-tailwind/#color-theme-editor */
+
+/* Dark mode colors. */
+:root {
+	--sl-color-accent-low: #301a33;
+	--sl-color-accent: #93439f;
+	--sl-color-accent-high: #dabede;
+	--sl-color-white: #ffffff;
+	--sl-color-gray-1: #eeedf3;
+	--sl-color-gray-2: #c2c1c9;
+	--sl-color-gray-3: #8c8998;
+	--sl-color-gray-4: #585663;
+	--sl-color-gray-5: #383643;
+	--sl-color-gray-6: #272531;
+	--sl-color-black: #1e1c2b;
+}
+/* Light mode colors. */
+:root[data-theme='light'] {
+	--sl-color-accent-low: #e4cfe7;
+	--sl-color-accent: #9545a1;
+	--sl-color-accent-high: #45224a;
+	--sl-color-white: #18171d;
+	--sl-color-gray-1: #272531;
+	--sl-color-gray-2: #383643;
+	--sl-color-gray-3: #585663;
+	--sl-color-gray-4: #8c8998;
+	--sl-color-gray-5: #c2c1c9;
+	--sl-color-gray-6: #eeedf3;
+	--sl-color-gray-7: #f6f6f9;
+	--sl-color-black: #ffffff;
 }
 
 .sidebar-pane {
@@ -9,4 +50,17 @@
 .right-sidebar {
     border-left: 1px solid var(--sl-color-hairline-shade);
     margin-top: 10px;
+}
+
+.social-icons svg {
+    color: var(--sl-color-text);
+}
+
+.site-title {
+    color: var(--sl-color-white);
+    font-family: 'DarumaDrop One', var(--__sl-font);
+}
+
+.hero h1 {
+    font-family: 'DarumaDrop One', var(--__sl-font);
 }

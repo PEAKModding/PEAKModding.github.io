@@ -17,7 +17,10 @@ export default defineConfig({
 			editLink: {
 				baseUrl: "https://github.com/PEAKModding/PEAKModding.github.io/edit/main/"
 			},
-			customCss: ['./src/styles/global.css'],
+			customCss: [
+				'./src/styles/global.css',
+				'@fontsource/darumadrop-one'
+			],
 			expressiveCode: {
 				themes: ['dracula', 'one-light'],
 			},
