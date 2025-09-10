@@ -59,6 +59,7 @@ https://starlight.astro.build/guides/css-and-tailwind/#color-theme-editor */
 .site-title {
     color: var(--sl-color-white);
     font-family: 'DarumaDrop One', var(--__sl-font);
+	justify-content: center;
 }
 
 .hero h1 {
