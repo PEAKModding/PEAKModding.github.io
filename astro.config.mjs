@@ -21,6 +21,9 @@ export default defineConfig({
 				'./src/styles/global.css',
 				'@fontsource/darumadrop-one'
 			],
+			components: {
+				Footer: './src/components/CustomFooter.astro',
+			},
 			expressiveCode: {
 				themes: ['dracula', 'one-light'],
 			},
