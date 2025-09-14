@@ -10,6 +10,7 @@ export default defineConfig({
 	integrations: [
 		starlight({
 			title: 'PEAK Modding Wiki',
+			lastUpdated: true,
 			social: [
 				{ icon: 'github', label: 'GitHub', href: 'https://github.com/PEAKModding' },
 				{ icon: 'discord', label: 'Discord', href: 'https://discord.gg/SAw86z24rB' }
