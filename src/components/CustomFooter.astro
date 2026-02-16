@@ -1,0 +1,29 @@
+---
+import Default from '@astrojs/starlight/components/Footer.astro';
+import { Aside, LinkButton } from '@astrojs/starlight/components';
+
+const isHomepage = Astro.locals.starlightRoute.id === '';
+const isAboutPage = Astro.locals.starlightRoute.id === 'getting-started/about';
+const hasSidebar = Astro.locals.starlightRoute.hasSidebar;
+---
+
+{
+  isHomepage ? (
+    <footer>Built with <a href="https://starlight.astro.build/">Starlight</a>, using <a href="https://fevol.github.io/starlight-theme-obsidian/">Starlight Obsidian</a> theme</footer>
+  ) : (
+    <>
+    {
+      hasSidebar && !isAboutPage &&
+        <Aside type="tip" title='Improve This Page'>
+          Found a typo or missing content? You can
+          <LinkButton href="/getting-started/about#contributing" variant="secondary" icon="heart">
+            Contribute to this Wiki!
+          </LinkButton>
+      </Aside>
+    }
+    <Default>
+      <slot />
+    </Default>
+    </>
+  )
+}

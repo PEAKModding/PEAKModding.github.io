@@ -4,6 +4,10 @@
 
 See the wiki at <https://peakmodding.github.io>.
 
+## Contributing
+
+See <https://peakmodding.github.io/getting-started/about#contributing>.
+
 ## 🚀 Project Structure
 
 Inside of your Astro + Starlight project, you'll see the following folders and files:

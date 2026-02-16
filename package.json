@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@astrojs/starlight": "^0.35.2",
+    "@fontsource/darumadrop-one": "^5.2.6",
     "astro": "^5.13.3",
     "sharp": "^0.32.6",
     "starlight-links-validator": "^0.17.1",
