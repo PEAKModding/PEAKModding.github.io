@@ -75,16 +75,15 @@ A decompiler allows you to inspect the game’s internal code. This helps you di
 
 You only need one decompiler. Recommended options:
 
-- [ILSpy](https://github.com/icsharpcode/ILSpy) (best decompilation)
-  - [ILSpyCmd](https://github.com/icsharpcode/ILSpy/tree/master/ICSharpCode.ILSpyCmd) (CLI option)
+- [ILSpy](https://github.com/icsharpcode/ILSpy) (best decompilation, GUI app available for Windows, Linux, and Mac)
+  - [ILSpyCmd](https://github.com/icsharpcode/ILSpy/tree/master/ICSharpCode.ILSpyCmd) (CLI option, can output full decompilation to disk for viewing in IDEs)
   - [ilspy-vscode](https://github.com/icsharpcode/ilspy-vscode) (Visual Studio Code extension)
-- [dnSpy](https://github.com/dnSpyEx/dnSpy)
-- [dotPeek](https://www.jetbrains.com/decompiler/#)
+- [dnSpyEx](https://github.com/dnSpyEx/dnSpy) (Windows only)
+- [dotPeek](https://www.jetbrains.com/decompiler/#) (Windows only)
 
 :::caution
-Many of these options are not natively supported on Linux. [ILSpyCmd](https://github.com/icsharpcode/ILSpy/tree/master/ICSharpCode.ILSpyCmd) is recommended in this case as it can output a full C# project which can be viewed in any IDE, which for pure C# viewing can be a better experience than any other option. If you are using Visual Studio Code, [ilspy-vscode](https://github.com/icsharpcode/ilspy-vscode) can be used for viewing IL, although a standalone app would be better for this.
-
-An [ILSpy Avalonia frontend](https://github.com/icsharpcode/AvaloniaILSpy) also exists that supports Linux, however it doesn't seem to be maintained as of writing and is buggy.
+The ILSpy GUI app for Linux is somewhat buggy (as of release [v11](https://github.com/icsharpcode/ILSpy/releases/tag/v11.0)). If it's not working well enough for you, you can use
+[ILSpyCmd](https://github.com/icsharpcode/ILSpy/tree/master/ICSharpCode.ILSpyCmd), and if you are using Visual Studio Code, [ilspy-vscode](https://github.com/icsharpcode/ilspy-vscode) can be used for viewing IL, although it's also quite rough.
 :::
 
 You’re now ready to move on:
