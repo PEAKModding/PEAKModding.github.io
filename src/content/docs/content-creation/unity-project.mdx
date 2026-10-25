@@ -41,53 +41,20 @@ Download and Install the following:
 - **[Unity Editor 6000.3.15f1](https://unity.com/releases/editor/whats-new/6000.3.15f1)**
 - **[.NET SDK 10.0](https://dotnet.microsoft.com/en-us/download/dotnet/10.0)**
 <Aside type="caution" title="Important">
-Make a copy of your PEAK installation and open the `PEAK_Data` folder inside the copied directory.\
-In this folder, locate the `level` and `sharedassets` files numbered **0 through 5**. Delete all other `level` and `sharedassets` files (numbered 6 and upwards).\
-**Skipping this step will increase the patch time significantly.**
+Make a copy of your PEAK installation, then navigate to the **`PEAK_Data\StreamingAssets`** directory inside the copy.\
+In this directory, locate the **`maps`** folder and delete it entirely. The fallback level **`WilIsland`** remains available.\
+**Skipping this step will significantly increase patch time and may cause the process to fail.**
 
 <details>
-<summary>Expected `PEAK_Data` & `StreamingAssets/maps` folder structure</summary>
+<summary>Want to keep more levels?</summary>
+
+*This will increase patch time. Proceed at your own discretion.*\
+Rather than deleting the entire **`maps`** folder, open it and keep only these files:
 <FileTree>
-- PEAK_Data/
-  - Managed/
-  - Plugins/
-  - Resources/
-  - StreamingAssets/
-    - maps/
-      - maps
-      - maps.manifest
-    - SaveIcon_PS5.png
-    - UnityServicesProjectConfiguration.json
-  - app.info
-  - boot.config
-  - globalgamemanagers
-  - globalgamemanagers.assets
-  - globalgamemanagers.assets.resS
-  - level0
-  - level1
-  - level2
-  - level3
-  - level4
-  - level4.resS
-  - resources.assets
-  - resources.assets.resS
-  - resources.resource
-  - RuntimeInitializeOnLoads.json
-  - ScriptingAssemblies.json
-  - sharedassets0.assets
-  - sharedassets0.assets.resS
-  - sharedassets0.resource
-  - sharedassets1.assets
-  - sharedassets1.assets.resS
-  - sharedassets1.resource
-  - sharedassets2.assets
-  - sharedassets2.assets.resS
-  - sharedassets3.assets
-  - sharedassets3.assets.resS
-  - sharedassets3.resource
-  - sharedassets4.assets
-  - sharedassets4.assets.resS
-  - sharedassets4.resource
+- levels192-207.assetbundle
+- levels192-207.assetbundle.manifest
+- maps
+- maps.manifest
 </FileTree>
 </details>
 </Aside>
@@ -95,7 +62,7 @@ In this folder, locate the `level` and `sharedassets` files numbered **0 through
 ### Unity Project Setup
 
 Create a new Unity project with the following configuration:
-  - **Editor Version**: `6000.3.15f1`
+  - **Editor Version**: **`6000.3.15f1`**
   - **Project Location**: Local Project
   - **Template**: Universal 3D (URP/SRP)
 
@@ -135,7 +102,7 @@ Press **`Run Patcher`** to start the patching process.
 
 ##### Expected patch behavior:
 
-- Fresh patch time: ~45-60 minutes.
+- Patch time: ~45-60 minutes.
 - Unity will restart approximately 5-6 times during the process.
 - Simply click **OK** on the 4 popups when prompted after starting the process.
 - For "Script Updating Consent" select: "Yes, for these and other files that might be found later".
